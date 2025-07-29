@@ -28,6 +28,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 /**
  * Class Controller
@@ -37,6 +38,8 @@ use Illuminate\Http\JsonResponse;
  */
 abstract class Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Validates sort parameters in the request against allowed columns and sort directions.
      *

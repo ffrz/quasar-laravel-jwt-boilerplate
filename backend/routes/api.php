@@ -16,7 +16,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::middleware('auth:api')->get('/me', [AuthController::class, 'me']);
 
-    Route::middleware(['auth:api'])->group(function () {
+    Route::middleware(['auth:api', 'acl'])->group(function () {
         Route::apiResource('users', UserController::class);
     });
 });

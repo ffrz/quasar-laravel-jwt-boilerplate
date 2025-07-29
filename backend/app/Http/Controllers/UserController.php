@@ -111,6 +111,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        // $this->authorize('viewAny');
+
         $this->validateSort($request, ['name', 'email', 'created_at', 'role', 'active']);
         [$orderBy, $orderType] = $this->getSortParams($request);
 
@@ -167,8 +169,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $this->validateUser($request);
+        $this->authorize('create');
 
+        $validated = $this->validateUser($request);
         $user = $this->saveUser(new User, $validated);
 
         return response()->json($user, 201);
@@ -202,6 +205,8 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
+        $this->authorize('view', $user);
+
         return response()->json($user);
     }
 
@@ -239,9 +244,9 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
+        $this->authorize('update', $user);
 
         $validated = $this->validateUser($request, $user->id);
-
         $user = $this->saveUser($user, $validated);
 
         return response()->json($user);
@@ -270,6 +275,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+        $this->authorize('delete', $user);
+
         $user->delete();
 
         return response()->json(['message' => 'User deleted']);
