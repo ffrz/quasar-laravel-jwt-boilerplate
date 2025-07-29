@@ -8,6 +8,11 @@
         },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "/api/v1"
+        }
+    ],
     "paths": {
         "/api/v1/register": {
             "post": {
@@ -300,6 +305,14 @@
                                         "type": "string",
                                         "format": "password",
                                         "example": "secret123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "example": "admin|user"
+                                    },
+                                    "active": {
+                                        "type": "boolean",
+                                        "example": "true"
                                     }
                                 },
                                 "type": "object"
@@ -340,7 +353,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Detail user ditemukan"
+                        "description": "User data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "User tidak ditemukan"
@@ -392,6 +412,14 @@
                                     "password": {
                                         "type": "string",
                                         "example": "newpass123"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "example": "admin|user"
+                                    },
+                                    "active": {
+                                        "type": "boolean",
+                                        "example": "true"
                                     }
                                 },
                                 "type": "object"
@@ -448,6 +476,59 @@
         }
     },
     "components": {
+        "schemas": {
+            "User": {
+                "required": [
+                    "id",
+                    "name",
+                    "email"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Fahmi Fauzi"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "admin",
+                            "user"
+                        ],
+                        "example": "admin"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "fahmi@example.com"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-02T15:30:00Z"
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",

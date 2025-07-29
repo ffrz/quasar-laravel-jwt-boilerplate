@@ -22,6 +22,16 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'role',
+        'active',
+    ];
+
+    const Role_Admin = 'admin';
+    const Role_User = 'user';
+
+    public const Roles = [
+        self::Role_User => 'User',
+        self::Role_Admin => 'Administrator',
     ];
 
     /**
@@ -42,6 +52,8 @@ class User extends Authenticatable implements JWTSubject
     protected function casts(): array
     {
         return [
+            'id' => 'integer',
+            'active' => 'boolean',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];

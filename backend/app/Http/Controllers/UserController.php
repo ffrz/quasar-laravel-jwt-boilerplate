@@ -157,7 +157,9 @@ class UserController extends Controller
      *             required={"name", "email", "password"},
      *             @OA\Property(property="name", type="string", example="John Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="secret123")
+     *             @OA\Property(property="password", type="string", format="password", example="secret123"),
+     *             @OA\Property(property="role", type="string", example="admin|user"),
+     *             @OA\Property(property="active", type="boolean", example="true")
      *         )
      *     ),
      *     @OA\Response(response=201, description="User berhasil dibuat")
@@ -188,8 +190,13 @@ class UserController extends Controller
      *         description="ID dari user",
      *         @OA\Schema(type="integer")
      *     ),
-     *     @OA\Response(response=200, description="Detail user ditemukan"),
-     *     @OA\Response(response=404, description="User tidak ditemukan")
+     *     @OA\Response(
+     *         response=200,
+     *         description="User data",
+     *         @OA\JsonContent(ref="#/components/schemas/User")
+     *     ),
+     *     @OA\Response(response=404, description="User tidak ditemukan"),
+     *
      * )
      */
     public function show($id)
@@ -220,7 +227,9 @@ class UserController extends Controller
      *             required={"name", "email"},
      *             @OA\Property(property="name", type="string", example="Jane Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="jane@example.com"),
-     *             @OA\Property(property="password", type="string", example="newpass123")
+     *             @OA\Property(property="password", type="string", example="newpass123"),
+     *             @OA\Property(property="role", type="string", example="admin|user"),
+     *             @OA\Property(property="active", type="boolean", example="true")
      *         )
      *     ),
      *     @OA\Response(response=200, description="User berhasil diupdate"),
@@ -279,6 +288,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $userId,
             'password' => $userId ? 'nullable|string|min:6' : 'required|string|min:6',
+            'active' => 'nullable|boolean',
+            'role' => 'required|string|in:' . array_keys(User::Roles),
         ]);
     }
 
