@@ -51,11 +51,12 @@ class UserController extends Controller
      * Menampilkan daftar user dengan dukungan filter, search, dan sorting.
      *
      * @OA\Get(
-     *     path="/users",
+     *     path="/api/v1/users",
      *     operationId="getUsers",
      *     tags={"Users"},
      *     summary="List semua user",
      *     description="Ambil data semua user dengan filter, search dan sorting",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="filter[role]",
      *         in="query",
@@ -145,10 +146,11 @@ class UserController extends Controller
      * Menyimpan user baru ke dalam database.
      *
      * @OA\Post(
-     *     path="/users",
+     *     path="/api/v1/users",
      *     operationId="createUser",
      *     tags={"Users"},
      *     summary="Buat user baru",
+     *     security={{"bearerAuth":{}}},
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -174,10 +176,11 @@ class UserController extends Controller
      * Menampilkan detail user berdasarkan ID.
      *
      * @OA\Get(
-     *     path="/users/{id}",
+     *     path="/api/v1/users/{id}",
      *     operationId="getUserById",
      *     tags={"Users"},
      *     summary="Ambil detail user berdasarkan ID",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -199,10 +202,11 @@ class UserController extends Controller
      * Memperbarui data user berdasarkan ID.
      *
      * @OA\Put(
-     *     path="/users/{id}",
+     *     path="/api/v1/users/{id}",
      *     operationId="updateUser",
      *     tags={"Users"},
      *     summary="Update data user",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
@@ -238,10 +242,11 @@ class UserController extends Controller
      * Menghapus user berdasarkan ID.
      *
      * @OA\Delete(
-     *     path="/users/{id}",
+     *     path="/api/v1/users/{id}",
      *     operationId="deleteUser",
      *     tags={"Users"},
      *     summary="Hapus user berdasarkan ID",
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="id",
      *         in="path",

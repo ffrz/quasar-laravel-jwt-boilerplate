@@ -1,21 +1,21 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "My API",
-        "description": "Dokumentasi REST API untuk My Project.",
+        "title": "Quasar + Laravel Starter Kit API",
+        "description": "Dokumentasi REST API untuk proyek Anda.",
         "contact": {
             "email": "fahmifauzirahman@gmail.com"
         },
         "version": "1.0.0"
     },
     "paths": {
-        "/api/register": {
+        "/api/v1/register": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
                 "summary": "Register user baru",
-                "operationId": "8a56853624e025573120a09a4c75d468",
+                "operationId": "6796c44e1f6079c411abbfed066c5907",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -72,13 +72,13 @@
                 }
             }
         },
-        "/api/login": {
+        "/api/v1/login": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
                 "summary": "Login dan dapatkan JWT token",
-                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "operationId": "da2ca4d7a5cdec77b8b45a20373535cb",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -135,13 +135,13 @@
                 }
             }
         },
-        "/api/me": {
+        "/api/v1/me": {
             "get": {
                 "tags": [
                     "Authentication"
                 ],
                 "summary": "Get info user yang sedang login",
-                "operationId": "9d9bc556f927575aa492a88c28fe5908",
+                "operationId": "ae2f8c1ae1f9c5aee99c01f5d13da30b",
                 "responses": {
                     "200": {
                         "description": "Data user",
@@ -175,7 +175,7 @@
                 ]
             }
         },
-        "/users": {
+        "/api/v1/users": {
             "get": {
                 "tags": [
                     "Users"
@@ -262,7 +262,12 @@
                     "200": {
                         "description": "Daftar user dalam bentuk paginasi"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -306,10 +311,15 @@
                     "201": {
                         "description": "User berhasil dibuat"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
-        "/users/{id}": {
+        "/api/v1/users/{id}": {
             "get": {
                 "tags": [
                     "Users"
@@ -335,7 +345,12 @@
                     "404": {
                         "description": "User tidak ditemukan"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "put": {
                 "tags": [
@@ -391,7 +406,12 @@
                     "404": {
                         "description": "User tidak ditemukan"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -418,7 +438,12 @@
                     "404": {
                         "description": "User tidak ditemukan"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },

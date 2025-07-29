@@ -5,8 +5,8 @@ namespace App;
 /**
  * @OA\Info(
  *     version="1.0.0",
- *     title="My API",
- *     description="Dokumentasi REST API untuk My Project.",
+ *     title="Quasar + Laravel Starter Kit API",
+ *     description="Dokumentasi REST API untuk proyek Anda.",
  *     @OA\Contact(
  *         email="fahmifauzirahman@gmail.com"
  *     )

@@ -48,7 +48,7 @@ class AuthController extends Controller
 {
     /**
      * @OA\Post(
-     *     path="/api/register",
+     *     path="/api/v1/register",
      *     tags={"Authentication"},
      *     summary="Register user baru",
      *     @OA\RequestBody(
@@ -100,7 +100,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/login",
+     *     path="/api/v1/login",
      *     tags={"Authentication"},
      *     summary="Login dan dapatkan JWT token",
      *     @OA\RequestBody(
@@ -145,7 +145,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/me",
+     *     path="/api/v1/me",
      *     tags={"Authentication"},
      *     summary="Get info user yang sedang login",
      *     security={{"bearerAuth":{}}},
