@@ -24,47 +24,36 @@
  * SOFTWARE.
  */
 
-namespace Database\Factories;
+namespace Database\Seeders;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
+use Database\Factories\UserFactory;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
-class UserFactory extends Factory
+class UserSeeder extends Seeder
 {
-    public const DEFAULT_PASSWORD = '123456';
     /**
-     * The current password being used by the factory.
+     * Seed the application's database.
      */
-    protected static ?string $password;
-
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
+    public function run(): void
     {
-        return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make(self::DEFAULT_PASSWORD),
+        $password = Hash::make(UserFactory::DEFAULT_PASSWORD);
+
+        User::factory()->create([
+            'name' => 'Administrator',
+            'email' => 'admin@example.com',
+            'role' => User::Role_Admin,
             'active' => true,
-            'remember_token' => Str::random(10),
-        ];
-    }
+            'password' => $password,
+        ]);
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
-    {
-        return $this->state(fn(array $attributes) => [
-            'email_verified_at' => null,
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'user@example.com',
+            'role' => User::Role_User,
+            'active' => true,
+            'password' => $password,
         ]);
     }
 }

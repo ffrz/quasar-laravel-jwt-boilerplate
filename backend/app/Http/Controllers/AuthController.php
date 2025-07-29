@@ -88,6 +88,8 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => User::Role_User,
+            'active' => true,
         ]);
 
         $token = JWTAuth::fromUser($user);
@@ -131,6 +133,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        $credentials['active'] = true; // hanya user aktif yang bisa login
 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
