@@ -26,6 +26,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -94,7 +95,7 @@ class AuthController extends Controller
 
         $token = JWTAuth::fromUser($user);
 
-        return response()->json([
+        return ApiResponse::success('Success', [
             'user' => $user,
             'token' => $token
         ], 201);
@@ -136,10 +137,10 @@ class AuthController extends Controller
         $credentials['active'] = true; // hanya user aktif yang bisa login
 
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return ApiResponse::error('Email atau password salah', 401);
         }
 
-        return response()->json([
+        return ApiResponse::success('Login success', [
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60
@@ -170,6 +171,6 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth('api')->user());
+        return ApiResponse::success('Success', auth('api')->user());
     }
 }

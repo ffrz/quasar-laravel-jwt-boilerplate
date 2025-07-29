@@ -12,8 +12,11 @@ Route::prefix('v1')->group(function () {
             'timestamp' => now()
         ]);
     });
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::middleware(['throttle:10,1'])->group(function () {
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/register', [AuthController::class, 'register']);
+    });
+
     Route::middleware('auth:api')->get('/me', [AuthController::class, 'me']);
 
     Route::middleware(['auth:api', 'acl'])->group(function () {
