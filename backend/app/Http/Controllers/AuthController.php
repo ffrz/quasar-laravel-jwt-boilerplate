@@ -95,11 +95,12 @@ class AuthController extends Controller
             'active' => true,
         ]);
 
-        $token = JWTAuth::fromUser($user);
+        // perlu kirim token kalau mau automatic login setelah register
+        $token = $this->auth()->fromUser($user);
 
         return ApiResponse::success('Success', [
-            'user' => $user,
-            'token' => $token
+            ...$this->tokenResponse($token),
+            ...$this->userResponse($user),
         ], 201);
     }
 
@@ -135,21 +136,20 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
         $credentials['active'] = true; // hanya user aktif yang bisa login
 
-        if (!$token = JWTAuth::attempt($credentials)) {
+        if (!$token = $this->auth()->attempt($credentials)) {
             return ApiResponse::error('Email atau password salah', 401);
         }
 
-        $user = auth('api')->user();
-        $permissions = app(AclService::class)->getUserPermissions($user);
         return ApiResponse::success('Login success', [
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
-            'user' => new UserResource($user),
-            'permissions' => $permissions,
+            ...$this->tokenResponse($token),
+            ...$this->userResponse(),
         ]);
     }
 
@@ -177,13 +177,10 @@ class AuthController extends Controller
      */
     public function me()
     {
-        $user = auth('api')->user();
-
-        return ApiResponse::success('Success', [
-            'user' => new UserResource($user),
-            // 'roles' => [], belum digunakan karena ada di user.role, boleh pakai kalau butuh lebih kompleks
-            'permissions' => app(AclService::class)->getUserPermissions($user),
-        ]);
+        return ApiResponse::success(
+            'Success',
+            $this->userResponse()
+        );
     }
 
     /**
@@ -206,7 +203,7 @@ class AuthController extends Controller
     public function logout()
     {
         try {
-            auth('api')->logout();
+            $this->auth()->logout();
             return ApiResponse::success('Logout berhasil');
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
             return ApiResponse::error('Gagal logout', 500);
@@ -229,14 +226,41 @@ class AuthController extends Controller
     public function refresh()
     {
         try {
-            $newToken = auth('api')->refresh();
-            return ApiResponse::success('Token diperbarui', [
-                'access_token' => $newToken,
-                'token_type' => 'bearer',
-                'expires_in' => auth('api')->factory()->getTTL() * 60
-            ]);
+            return ApiResponse::success(
+                'Token diperbarui',
+                $this->tokenResponse($this->auth()->refresh())
+            );
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
             return ApiResponse::error('Token tidak valid', 401);
         }
+    }
+
+    /**
+     * Buat response token JWT.
+     *
+     * @param string $token
+     * @return array
+     */
+    private function tokenResponse($token): array
+    {
+        return [
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $this->auth()->factory()->getTTL() * 60,
+        ];
+    }
+
+    /**
+     * Buat response informasi user dan permission ACL-nya.
+     *
+     * @return array
+     */
+    private function userResponse(?User $user = null): array
+    {
+        $user = $user ?? $this->auth()->user();
+        return [
+            'user' => new UserResource($user),
+            'permissions' => app(AclService::class)->getUserPermissions($user),
+        ];
     }
 }

@@ -26,12 +26,16 @@ use App\Models\User;
  * pada `UserController`.
  */
 return [
+    // mapping ke kelas controller di backend
+    'controller_alias' => [
+        'App\\Http\\Controllers\\UserController' => 'user',
+        'App\\Http\\Controllers\\ProductController' => 'product',
+    ],
     'roles' => [
-        User::Role_User => [
-            UserController::class => [
-                'index',
-                'show'
-            ]
+        // kita gunakan alias untuk diakses di backend, data ini yang akan dikirim ke frontend
+        'user' => [
+            'user' => ['index', 'show', 'store'],
+            'product' => ['index', 'store'],
         ],
-    ]
+    ],
 ];

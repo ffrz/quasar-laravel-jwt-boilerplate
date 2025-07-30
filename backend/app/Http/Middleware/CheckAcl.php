@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 class CheckAcl
 {
@@ -16,10 +15,18 @@ class CheckAcl
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $role = $user->role; // Asumsikan kolom 'role' ada di tabel users
+        $role = $user->role;
         $action = $this->getActionName($request);
-        $controller = $this->getControllerName($request);
-        $permissions = config("acl.roles.$role.$controller", []);
+        $controllerFQCN = $this->getControllerName($request);
+
+        // Ambil alias dari FQCN
+        $controllerAlias = config("acl.controller_alias.$controllerFQCN");
+
+        if (!$controllerAlias) {
+            return response()->json(['error' => 'Unknown controller alias'], 500);
+        }
+
+        $permissions = config("acl.roles.$role.$controllerAlias", []);
 
         if (!in_array($action, $permissions)) {
             return response()->json(['error' => 'Forbidden'], 403);
@@ -36,9 +43,8 @@ class CheckAcl
         $action = $route->getAction();
 
         if (isset($action['controller'])) {
-            // Output: App\Http\Controllers\UserController@index
             [$controllerClass, $method] = explode('@', $action['controller']);
-            return $controllerClass; // FQCN
+            return $controllerClass;
         }
 
         return null;
@@ -52,7 +58,7 @@ class CheckAcl
         $action = $route->getAction();
 
         if (isset($action['controller']) && strpos($action['controller'], '@') !== false) {
-            return explode('@', $action['controller'])[1]; // e.g. 'index'
+            return explode('@', $action['controller'])[1];
         }
 
         return 'Closure';

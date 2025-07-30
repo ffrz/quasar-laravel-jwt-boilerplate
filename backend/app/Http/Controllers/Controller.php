@@ -29,6 +29,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Tymon\JWTAuth\JWTGuard;
 
 /**
  * Class Controller
@@ -77,5 +78,13 @@ abstract class Controller
         $orderType = strtolower($request->get('order_type', $defaultOrder));
 
         return [$orderBy, $orderType];
+    }
+
+    /**
+     * @return JWTGuard
+     */
+    protected function auth()
+    {
+        return auth('api');
     }
 }
