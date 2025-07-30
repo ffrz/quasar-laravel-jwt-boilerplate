@@ -14,9 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'acl' => \App\Http\Middleware\CheckAclMiddleware::class,
-        ]);
-        $middleware->alias([
+            'acl' => \App\Http\Middleware\CheckAcl::class,
+            'user.active' => \App\Http\Middleware\CheckUserActive::class,
             'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         ]);
     })

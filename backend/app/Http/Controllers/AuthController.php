@@ -27,8 +27,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Services\AclService;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -140,10 +142,14 @@ class AuthController extends Controller
             return ApiResponse::error('Email atau password salah', 401);
         }
 
+        $user = auth('api')->user();
+        $permissions = app(AclService::class)->getUserPermissions($user);
         return ApiResponse::success('Login success', [
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'user' => new UserResource($user),
+            'permissions' => $permissions,
         ]);
     }
 
@@ -171,6 +177,66 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return ApiResponse::success('Success', auth('api')->user());
+        $user = auth('api')->user();
+
+        return ApiResponse::success('Success', [
+            'user' => new UserResource($user),
+            // 'roles' => [], belum digunakan karena ada di user.role, boleh pakai kalau butuh lebih kompleks
+            'permissions' => app(AclService::class)->getUserPermissions($user),
+        ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/logout",
+     *     tags={"Authentication"},
+     *     summary="Logout user dan invalidate token",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Logout berhasil"
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized")
+     * )
+     *
+     * Logout user dan invalidate token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        try {
+            auth('api')->logout();
+            return ApiResponse::success('Logout berhasil');
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return ApiResponse::error('Gagal logout', 500);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/refresh",
+     *     tags={"Authentication"},
+     *     summary="Refresh JWT token",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Token baru diberikan"
+     *     ),
+     *     @OA\Response(response=401, description="Unauthorized")
+     * )
+     */
+    public function refresh()
+    {
+        try {
+            $newToken = auth('api')->refresh();
+            return ApiResponse::success('Token diperbarui', [
+                'access_token' => $newToken,
+                'token_type' => 'bearer',
+                'expires_in' => auth('api')->factory()->getTTL() * 60
+            ]);
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return ApiResponse::error('Token tidak valid', 401);
+        }
     }
 }

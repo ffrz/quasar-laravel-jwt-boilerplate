@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-class CheckAclMiddleware
+class CheckAcl
 {
     public function handle(Request $request, Closure $next)
     {

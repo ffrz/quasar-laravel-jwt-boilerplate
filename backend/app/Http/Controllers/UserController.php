@@ -26,6 +26,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiResponse;
+use App\Http\Requests\User\SaveUserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -167,14 +169,13 @@ class UserController extends Controller
      *     @OA\Response(response=201, description="User berhasil dibuat")
      * )
      */
-    public function store(Request $request)
+    public function store(SaveUserRequest $request)
     {
         $this->authorize('create');
 
-        $validated = $this->validateUser($request);
-        $user = $this->saveUser(new User, $validated);
+        $user = $this->saveUser(new User(), $request->validated());
 
-        return response()->json($user, 201);
+        return ApiResponse::success('Pengguna baru berhasil dibuat', $user);
     }
 
     /**
@@ -241,15 +242,15 @@ class UserController extends Controller
      *     @OA\Response(response=404, description="User tidak ditemukan")
      * )
      */
-    public function update(Request $request, $id)
+    public function update(SaveUserRequest $request, $id)
     {
         $user = User::findOrFail($id);
+
         $this->authorize('update', $user);
 
-        $validated = $this->validateUser($request, $user->id);
-        $user = $this->saveUser($user, $validated);
+        $user = $this->saveUser($user, $request->validated());
 
-        return response()->json($user);
+        return ApiResponse::success('Pengguna telah diperbarui.', $user);
     }
 
     /**
@@ -280,24 +281,6 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(['message' => 'User deleted']);
-    }
-
-    /**
-     * Validasi input user untuk create/update.
-     *
-     * @param Request $request
-     * @param int|null $userId
-     * @return array
-     */
-    private function validateUser(Request $request, $userId = null)
-    {
-        return $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $userId,
-            'password' => $userId ? 'nullable|string|min:6' : 'required|string|min:6',
-            'active' => 'nullable|boolean',
-            'role' => 'required|string|in:' . array_keys(User::Roles),
-        ]);
     }
 
     /**
