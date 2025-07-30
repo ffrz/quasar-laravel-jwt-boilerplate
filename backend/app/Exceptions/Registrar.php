@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Helpers\ApiResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final class Registrar
 {
@@ -15,6 +16,10 @@ final class Registrar
     {
         $exceptions->render(function (ValidationException $e, Request $request) {
             return ApiResponse::error('Validation error', 422, $e->validator->errors());
+        });
+
+        $exceptions->render(function (ModelNotFoundException $e, Request $request) {
+            return ApiResponse::error('Data tidak ditemukan', 404, $e->getMessage());
         });
 
         // $exceptions->render(function (AuthenticationException $e, Request $request) {

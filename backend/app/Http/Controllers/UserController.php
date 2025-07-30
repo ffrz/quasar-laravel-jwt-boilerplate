@@ -143,7 +143,7 @@ class UserController extends Controller
         $users = $q->paginate((int) $request->get('per_page', 10))
             ->withQueryString();
 
-        return response()->json($users);
+        return ApiResponse::success('Daftar pengguna berhasil diambil', $users);
     }
 
     /**
@@ -207,8 +207,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $this->authorize('view', $user);
-
-        return response()->json($user);
+        return ApiResponse::success('Detail pengguna', $user);
     }
 
     /**
@@ -280,7 +279,7 @@ class UserController extends Controller
 
         $user->delete();
 
-        return response()->json(['message' => 'User deleted']);
+        return ApiResponse::success('Pengguna telah dihapus');
     }
 
     /**
