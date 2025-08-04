@@ -30,6 +30,7 @@ export default defineConfig((ctx) => {
       'roboto-font', // optional, you are not bound to it
       'material-icons', // optional, you are not bound to it
       'material-icons-outlined',
+      'material-symbols-outlined',
     ],
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#build
@@ -89,6 +90,8 @@ export default defineConfig((ctx) => {
             eslint: {
               lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
               useFlatConfig: true,
+              warnings: false,
+              errors: false,
             },
           },
           { server: false },
@@ -100,6 +103,14 @@ export default defineConfig((ctx) => {
     devServer: {
       // https: true,
       open: true, // opens browser window automatically
+      port: 9000,
+      prot: {
+        '/api': {
+          target: 'http://localhost:8000',
+          changeOrigin: true,
+          // rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
