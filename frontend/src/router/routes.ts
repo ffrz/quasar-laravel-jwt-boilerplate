@@ -16,6 +16,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/admin/product-category/IndexPage.vue'),
         meta: { requiresAuth: true },
       },
+      {
+        path: '/admin/settings/users',
+        component: () => import('pages/admin/user/IndexPage.vue'),
+        meta: { requiresAuth: true },
+      },
       //     {
       //       path: '/admin/customers',
       //       component: () => import('pages/admin/customer/Index.vue'),

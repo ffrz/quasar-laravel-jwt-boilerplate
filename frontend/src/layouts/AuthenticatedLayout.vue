@@ -186,7 +186,7 @@ const logout = () => {
           justify-content: center;
         "
       >
-       <div style="width: 100%; padding: 8px; display: flex; justify-content: space-between">
+        <div style="width: 100%; padding: 8px; display: flex; justify-content: space-between">
           <q-btn-dropdown
             v-model="isDropdownOpen"
             class="profile-btn text-bold"
@@ -291,13 +291,10 @@ const logout = () => {
     </q-drawer>
 
     <q-page-container class="bg-grey-1">
-      <q-page padding>
+      <q-page class="q-pa-md">
         <router-view />
-        <slot></slot>
       </q-page>
     </q-page-container>
-
-    <slot name="footer"></slot>
   </q-layout>
 </template>
 
