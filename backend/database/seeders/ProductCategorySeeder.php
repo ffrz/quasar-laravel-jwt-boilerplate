@@ -26,21 +26,37 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class DatabaseSeeder extends Seeder
+class ProductCategorySeeder extends Seeder
 {
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        DB::transaction(function () {
-            $this->call([
-                ProductCategorySeeder::class,
-                UserSeeder::class,
-            ]);
-        });
+
+        DB::table('product_categories')->insert([
+            [
+                'name' => 'Elektronik',
+                'description' => 'Produk-produk elektronik',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'name' => 'Alat Tulis',
+                'description' => 'Kategori alat tulis kantor dan sekolah',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'name' => 'Peralatan Rumah Tangga',
+                'description' => 'Peralatan dapur dan rumah',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+        ]);
     }
 }

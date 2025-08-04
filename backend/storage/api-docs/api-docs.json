@@ -224,6 +224,249 @@
                 ]
             }
         },
+        "/api/v1/product-categories": {
+            "get": {
+                "tags": [
+                    "ProductCategories"
+                ],
+                "summary": "List semua kategori produk",
+                "description": "Ambil data semua kategori produk dengan filter, search dan sorting",
+                "operationId": "getProductCategories",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Pencarian berdasarkan nama kategori atau deskripsi",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Kolom untuk sorting (name, description)",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "description": "Arah sorting (asc atau desc)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Jumlah item per halaman",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Halaman yang dipilih, defaultnya halaman pertama.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Daftar kategori produk dalam bentuk paginasi"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "ProductCategories"
+                ],
+                "summary": "Buat kategori produk baru",
+                "description": "Menyimpan kategori produk baru ke dalam database.",
+                "operationId": "createProductCategory",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Aksesoris Laptop"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Berbagai aksesoris laptop / notebook"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Kategori produk berhasil dibuat"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/product-categories/{id}": {
+            "get": {
+                "tags": [
+                    "ProductCategories"
+                ],
+                "summary": "Ambil detail kategori produk berdasarkan ID",
+                "description": "Menampilkan detail kategori produk berdasarkan ID.",
+                "operationId": "getProductCategoryById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID dari kategori produk",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data kategori produk",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProductCategory"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Kategori produk tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "ProductCategories"
+                ],
+                "summary": "Update data kategori produk",
+                "description": "Memperbarui kategori produk berdasarkan ID.",
+                "operationId": "updateProductCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID dari kategori produk",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Aksesoris Laptop"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Berbagai aksesoris laptop / notebook"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kategori produk berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Kategori produk tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "ProductCategories"
+                ],
+                "summary": "Hapus kategori produk berdasarkan ID",
+                "description": "Menghapus kategori produk berdasarkan ID.",
+                "operationId": "deleteProductCategory",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID dari kategori produk",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Kategori produk berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Kategori produk tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/users": {
             "get": {
                 "tags": [
@@ -521,6 +764,38 @@
     },
     "components": {
         "schemas": {
+            "ProductCategory": {
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Aksesoris laptop"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Deskripsi kategori aksesoris laptop"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-02T15:30:00Z"
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "required": [
                     "id",
@@ -589,6 +864,10 @@
         {
             "name": "Users",
             "description": "API untuk manajemen user"
+        },
+        {
+            "name": "ProductCategories",
+            "description": "ProductCategories"
         }
     ]
 }

@@ -24,23 +24,10 @@
  * SOFTWARE.
  */
 
-namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+namespace App\Models;
 
-class DatabaseSeeder extends Seeder
+class BaseModel extends \Illuminate\Database\Eloquent\Model
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        DB::transaction(function () {
-            $this->call([
-                ProductCategorySeeder::class,
-                UserSeeder::class,
-            ]);
-        });
-    }
+    // TODO: add more functionalities here
 }

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue';
-import { useQuasar, QTableProps, QTableColumn } from 'quasar';
+import type { QTableProps, QTableColumn } from 'quasar';
+import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 
 // --- INTERFACE & TIPE DATA ---
@@ -68,9 +69,10 @@ const fetchItems = (props?: { pagination: Pagination }) => {
     // 1. Simulasi Filter (Pencarian)
     if (filter.search) {
       const searchTerm = filter.search.toLowerCase();
-      items = items.filter(item =>
-        item.name.toLowerCase().includes(searchTerm) ||
-        item.description.toLowerCase().includes(searchTerm)
+      items = items.filter(
+        (item) =>
+          item.name.toLowerCase().includes(searchTerm) ||
+          item.description.toLowerCase().includes(searchTerm),
       );
     }
 
@@ -114,7 +116,6 @@ const deleteItem = (row: ProductCategory) => {
   $q.dialog({
     title: 'Konfirmasi Hapus',
     message: `Apakah Anda yakin ingin menghapus kategori "${row.name}"?`,
-    cancel: true,
     persistent: true,
     ok: {
       label: 'Hapus',
@@ -124,10 +125,10 @@ const deleteItem = (row: ProductCategory) => {
     cancel: {
       label: 'Batal',
       flat: true,
-    }
+    },
   }).onOk(() => {
     loading.value = true;
-    const index = MOCK_DATABASE.findIndex(item => item.id === row.id);
+    const index = MOCK_DATABASE.findIndex((item) => item.id === row.id);
     if (index > -1) {
       MOCK_DATABASE.splice(index, 1);
       $q.notify({ type: 'positive', message: `Kategori "${row.name}" berhasil dihapus.` });
@@ -152,13 +153,12 @@ const check_role = (role: string) => {
 const computedColumns = computed(() => {
   if ($q.screen.gt.sm) return columns;
   // Di layar kecil, hanya tampilkan kolom 'name' dan 'action'
-  return columns.filter(col => col.name === 'name' || col.name === 'action');
+  return columns.filter((col) => col.name === 'name' || col.name === 'action');
 });
 
 onMounted(() => {
   fetchItems();
 });
-
 </script>
 
 <template>
@@ -166,12 +166,7 @@ onMounted(() => {
     <template #title>{{ title }}</template>
 
     <template #right-button>
-      <q-btn
-        icon="add"
-        dense
-        color="primary"
-        @click="router.push('/admin/product-category/add')"
-      />
+      <q-btn icon="add" dense color="primary" @click="router.push('/admin/product-category/add')" />
       <q-btn
         class="q-ml-sm"
         :icon="!showFilter ? 'filter_alt' : 'filter_alt_off'"
@@ -235,7 +230,9 @@ onMounted(() => {
             <q-td key="name" :props="props" class="wrap-column">
               <span class="text-bold">{{ props.row.name }}</span>
               <template v-if="!$q.screen.gt.sm && props.row.description">
-                <div class="text-grey-8 text-caption"><q-icon name="notes" size="xs" class="q-mr-xs"/> {{ props.row.description }}</div>
+                <div class="text-grey-8 text-caption">
+                  <q-icon name="notes" size="xs" class="q-mr-xs" /> {{ props.row.description }}
+                </div>
               </template>
             </q-td>
 

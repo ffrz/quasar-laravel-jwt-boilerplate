@@ -24,23 +24,23 @@
  * SOFTWARE.
  */
 
-namespace Database\Seeders;
+namespace App\Models;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
 
-class DatabaseSeeder extends Seeder
+class ProductCategory extends BaseModel
 {
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable;
+
     /**
-     * Seed the application's database.
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
      */
-    public function run(): void
-    {
-        DB::transaction(function () {
-            $this->call([
-                ProductCategorySeeder::class,
-                UserSeeder::class,
-            ]);
-        });
-    }
+    protected $fillable = [
+        'name',
+        'description',
+    ];
 }

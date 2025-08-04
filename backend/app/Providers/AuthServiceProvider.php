@@ -17,7 +17,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // Map model to its corresponding policy class
-        User::class => UserPolicy::class,
+        \App\Models\User::class => \App\Policies\UserPolicy::class,
+
     ];
 
     /**
@@ -35,5 +36,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('is-active', function (User $user) {
             return $user->active;
         });
+
+        // Gate::before(function ($user, $ability) {
+        //     return true;
+        // });
     }
 }

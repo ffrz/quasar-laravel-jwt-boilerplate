@@ -24,23 +24,30 @@
  * SOFTWARE.
  */
 
-namespace Database\Seeders;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-
-class DatabaseSeeder extends Seeder
+return new class extends Migration
 {
     /**
-     * Seed the application's database.
+     * Run the migrations.
      */
-    public function run(): void
+    public function up(): void
     {
-        DB::transaction(function () {
-            $this->call([
-                ProductCategorySeeder::class,
-                UserSeeder::class,
-            ]);
+        Schema::create('product_categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('description');
+            $table->timestamps();
         });
     }
-}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('product_categories');
+    }
+};

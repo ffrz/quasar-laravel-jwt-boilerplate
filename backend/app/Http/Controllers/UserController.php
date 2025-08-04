@@ -113,7 +113,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        // $this->authorize('viewAny');
+        $this->authorize('viewAny', User::class);
 
         $this->validateSort($request, ['name', 'email', 'created_at', 'role', 'active']);
         [$orderBy, $orderType] = $this->getSortParams($request);
@@ -171,7 +171,7 @@ class UserController extends Controller
      */
     public function store(SaveUserRequest $request)
     {
-        $this->authorize('create');
+        $this->authorize('create', User::class);
 
         $user = $this->saveUser(new User(), $request->validated());
 
@@ -205,6 +205,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        $this->authorize('show', User::class);
+
         $user = User::findOrFail($id);
         $this->authorize('view', $user);
         return ApiResponse::success('Detail pengguna', $user);

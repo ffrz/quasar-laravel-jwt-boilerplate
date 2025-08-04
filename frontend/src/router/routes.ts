@@ -13,7 +13,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/admin/product-categories',
-        component: () => import('pages/admin/product-category/Index.vue'),
+        component: () => import('pages/admin/product-category/IndexPage.vue'),
         meta: { requiresAuth: true },
       },
       //     {

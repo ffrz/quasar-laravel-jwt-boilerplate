@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,11 @@ class CheckAcl
         }
 
         $role = $user->role;
+
+        if ($role === User::Role_Admin) {
+            return $next($request);
+        }
+
         $action = $this->getActionName($request);
         $controllerFQCN = $this->getControllerName($request);
 
